@@ -17,6 +17,7 @@ int nScreenHeight = 30;     // Console Screen Size Y (rows)
 int Rotate(int px, int py, int r)
 {
     int retorno = 0;
+
     switch (r % 4)
     {
     case 0:
@@ -37,6 +38,35 @@ int Rotate(int px, int py, int r)
     }
 
     return retorno;
+}
+
+bool DoesPieceFit(int nTetromino, int nRotation, int nPosX, int nPosY)
+{
+    for (int nPx = 0; nPx < 4; nPx++)
+    {
+        for (int nPy = 0; nPy < 4; nPy++)
+        {
+            // Get index into piece
+            int pi = Rotate(nPx, nPy, nRotation);
+
+            // Get index into field
+            int fi = (nPosY + nPy) * nFieldWidth + (nPosX + nPx);
+
+            if (nPosX + nPx >= 0 && nPosX + px < nFieldWidth)
+            {
+                if (nPosY + nPy >= 0 && nPosY + nPy < nFieldHeight)
+                {
+                    if (tetromino[nTetromino][pi] == L'X' && pField[fi] != 0)
+                    {
+                        return false;   // fail on first hit.
+                    }
+                }
+            }
+
+        }
+    }
+
+    return true;
 }
 
 int main()
@@ -96,9 +126,31 @@ int main()
     SetConsoleActiveScreenBuffer(hConsole);
     DWORD dwBytesWritten = 0;
 
-    // Display Frame
-    WriteConsoleOutputCharacter(hConsole, screen, nScreenHeight * nScreenWidth, { 0,0 }, &dwBytesWritten);
-    Sleep(1000 / 30);
+    bool bGameOver = false;
+
+    while (!bGameOver)
+    {
+        // GAME TIMING ===================================
+
+        // INPUT =========================================
+
+        // GAME LOGIC ====================================
+
+        // RENDER OUTPUT =================================
+
+
+        // Draw Field
+        for (int nIndex = 0; nIndex < nFieldWidth; nIndex++)
+        {
+            for (int nIndey = 0; nIndey < nFieldHeight; nIndey++)
+            {
+                screen[(nIndey + 2)*nScreenWidth + (nIndex + 2)] = L" ABCDEFG=#"[pField[nIndey*nFieldWidth + nIndex]];
+            }
+        }
+        // Display Frame
+        WriteConsoleOutputCharacter(hConsole, screen, nScreenHeight * nScreenWidth, { 0,0 }, &dwBytesWritten);
+    }
+
     return 0;
 }
 
